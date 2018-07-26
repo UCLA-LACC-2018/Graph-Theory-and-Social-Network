@@ -19,7 +19,20 @@
 #
 #*************************************
 def matrix_load(filename):
-	
+    file = open(filename)
+    listlines = file.readlines()
+    matrix = []
+    for x in range(len(listlines)):
+        line = []
+        for y in range(len(listlines)):
+            if listlines[x][y] == "1":
+                line.append(1)
+            else: 
+                line.append(0)
+        matrix.append(line)
+    file.close()
+    return matrix
+        
 #*************************************
 # This is where you write your code
 #
@@ -36,8 +49,15 @@ def matrix_load(filename):
 # (or each column) and print this. Use a nested loop (for or while)
 #*************************************
 
-def print_degrees(mat):
-	
+def print_degrees(matrix):
+    num=len(matrix)
+    for x in range(num):
+        degree=0
+        for y in range(num):
+            if matrix[x][y]==1:
+                degree+=1
+    print('Degree of Node ',x,': ',degree,'\n')
+
 #*************************************
 # This is where you write your code
 #
@@ -52,7 +72,16 @@ def print_degrees(mat):
 #*************************************
 
 def shortest_path(mat,node1,node2):
-	
+    count = 0
+    nodelist = []
+    for i in range(len(matrix):
+        for j in range(len(matrix[i]):
+            tempnode = []
+            if matrix[i][j] == 1:
+                tempnode.append(count+1)
+                count= count + 1
+            else:
+                tempnode.append(0)
 
 #*************************************
 # This is where you write your code
@@ -69,4 +98,5 @@ def shortest_path(mat,node1,node2):
 #*************************************
 
 def detect_cycle(mat):
+    return[]
 	
