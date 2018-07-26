@@ -19,7 +19,21 @@
 #
 #*************************************
 def matrix_load(filename):
-	
+    file=open(filename)
+    a=file.readlines()
+    num=len(a)
+    mat=[]
+    for x in range(num):
+        tmp=[]
+        for y in range (num):
+            if a[x][y]=='1':
+                tmp.append(1)
+            else:
+                tmp.append(0)
+        mat.append(tmp)
+    file.close()
+    return mat
+
 #*************************************
 # This is where you write your code
 #
@@ -37,7 +51,13 @@ def matrix_load(filename):
 #*************************************
 
 def print_degrees(mat):
-	
+    num=len(mat)
+    for x in range(num):
+        degree=0
+        for y in range(num):
+               if mat[x][y]==1:
+                    degree+=1
+        print('Degree of Node ',x,': ',degree,'\n')
 #*************************************
 # This is where you write your code
 #
@@ -52,7 +72,42 @@ def print_degrees(mat):
 #*************************************
 
 def shortest_path(mat,node1,node2):
-	
+    num=len(mat)
+    nodeind=[0]*num
+    nodeind[node1]=1
+    prelist=[node1]
+    findpath=0
+    stpath=[]
+    while findpath==0:
+        newnodecon=0
+        curlist=[]
+        for x in prelist:
+            for y in range(num):
+                if nodeind[y]==0 and mat[x][y]==1:
+                    newnodecon+=1
+                    curlist.append(y)
+                    nodeind[y]=nodeind[x]+1
+        if node2 in curlist:
+            findpath=1
+            print('The path is: ')
+            count=nodeind[node2]
+            curnode=node2
+            stpath.append(curnode)
+            while count>1:
+                for x in range(num):
+                    if nodeind[x]==(count-1) and mat[x][curnode]==1:
+                        print('(',x,',',curnode,'),')
+                        curnode=x
+                        stpath.append(curnode)
+                        break
+                count=count-1
+            return stpath
+        elif newnodecon==0:
+            print('No such path')
+            findpath=-1
+            return stpath
+        else:
+            prelist=curlist
 
 #*************************************
 # This is where you write your code
@@ -69,4 +124,4 @@ def shortest_path(mat,node1,node2):
 #*************************************
 
 def detect_cycle(mat):
-	
+    return []
