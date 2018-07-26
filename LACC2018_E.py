@@ -19,7 +19,20 @@
 #
 #*************************************
 def matrix_load(filename):
-	
+    file = open(filename);
+    matrix_str = file.readlines();
+    matrix_len = len(matrix_str);
+    matrix = [];
+    for x in range(matrix_len):
+        temp = [];
+        for y in range(matrix_len):
+            if(matrix_str[x][y] == "1"):
+                temp.append(1);
+            else:
+                temp.append(0);
+        matrix.append(temp);
+    file.close();
+    return matrix;
 #*************************************
 # This is where you write your code
 #
@@ -37,7 +50,13 @@ def matrix_load(filename):
 #*************************************
 
 def print_degrees(mat):
-	
+    mat_len = len(mat);
+    for x in range(mat_len):
+        deg = 0;
+        for y in range(mat_len):
+            if(mat[x][y] == 1):
+                deg += 1;
+        print("Degree of Node",x,": ",deg,"\n");
 #*************************************
 # This is where you write your code
 #
@@ -52,8 +71,42 @@ def print_degrees(mat):
 #*************************************
 
 def shortest_path(mat,node1,node2):
-	
-
+    mat_len = len(mat);
+    idnode = [0] * mat_len;
+    idnode[node1] = 1;
+    olist = [node1];
+    peth = 0;
+    sixpaths = [];
+    while(peth == 0):
+        nodecon = 0;
+        curry = [];
+        for x in olist:
+            for y in range(mat_len):
+                if(idnode[y] == 0 and mat[x][y] == 1):
+                    nodecon += 1;
+                    curry.append(y);
+                    idnode[y] = idnode[x] + 1;
+        if(node2 in curry):
+            peth = 1;
+            print("The path is: ")
+            count = idnode[node2];
+            currynode = node2;
+            sixpaths.append(currynode);
+            while(count > 1):
+                for x in range(mat_len):
+                    if(idnode[x] == (count - 1) and mat[x][currynode] == 1):
+                        print("(",x,",",currynode,"),");
+                        currynode = x;
+                        sixpaths.append(currynode);
+                        break;
+                count -= 1;
+            return sixpaths;
+        elif(nodecon == 0):
+            print("No such path");
+            peth = -1;
+            return sixpaths;
+        else:
+            olist = curry;
 #*************************************
 # This is where you write your code
 #
@@ -69,4 +122,54 @@ def shortest_path(mat,node1,node2):
 #*************************************
 
 def detect_cycle(mat):
-	
+    mat_len = len(mat);
+    trEEE = [];
+    for x in range(mat_len):
+        temp = [];
+        for y in range(mat_len):
+            if(mat[x][y] == 1):
+                temp.append(y);
+        trEEE.append([-1,0,temp]);
+    olist = [0];
+    trEEE[0][1] = 1;
+    cicle = 0;
+    scicole = [];
+    while(cicle == 0):
+        curry = [];
+        for x in olist:
+            for y in trEEE[x][2]:
+                if(y != trEEE[x][0] and trEEE[y][1] == 1):
+                    cicle = 1;
+                    print("Find a cycle consisting of the following edges:\n");
+                    rbranch = [];
+                    rnode = y;
+                    while(rnode != -1):
+                        rbranch.append(rnode);
+                        rnode = trEEE[rnode][0];
+                    lnode = x;
+                    while(lnode != - 1):
+                        if(lnode in rbranch):
+                            break;
+                        else:
+                            scicole.append(lnode);
+                            print("(",trEEE[lnode][0],",",lnode,")\n");
+                            lnode = trEEE[lnode][0];
+                    scicole.reverse();
+                    print("(",x,",",y,")\n");
+                    currynode = y;
+                    while(currynode != lnode):
+                        scicole.append(currynode);
+                        print("(",currynode,",",trEEE[currynode][0],")\n");
+                        currynode = trEEE[currynode][0];
+                    scicole.append(currynode);
+                    return scicole;
+                elif(trEEE[y][1] == 0):
+                    trEEE[y][1] = 1;
+                    curry.append(y);
+                    trEEE[y][0] = x;
+        if(curry == []):
+            cicle = -1;
+            print("No cycle in the graph");
+            return scicole;
+        else:
+            olist = curry;
