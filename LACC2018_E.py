@@ -19,7 +19,19 @@
 #
 #*************************************
 def matrix_load(filename):
-	
+    with open(filename, 'r') as f:
+        a = f.readlines()
+    mat = []
+    for i in range(len(a)) :
+        temp = []
+        for j in range(len(a[i])) :
+            if a[i][j] == '1' :
+                temp.append(1)
+            else :
+                temp.append(0)
+        mat.append(temp)
+    f.close()
+    return mat
 #*************************************
 # This is where you write your code
 #
@@ -37,7 +49,12 @@ def matrix_load(filename):
 #*************************************
 
 def print_degrees(mat):
-	
+    for x in range(len(mat)) :
+        degree = 0
+        for y in range(len(mat[x])) :
+            if(mat[x][y] == 1) :
+                degree += 1
+        print("Node " + str(x) + " has a degree of: " + str(degree) + "\n")
 #*************************************
 # This is where you write your code
 #
@@ -52,8 +69,46 @@ def print_degrees(mat):
 #*************************************
 
 def shortest_path(mat,node1,node2):
-	
-
+    alreadyvisited = [node1]
+    curlist = []
+    backpath = []
+    allpaths = []
+    nodeindexes = [0] * len(mat)
+    nodeindexes[node1] = 1
+    foundPath = False
+    while not foundPath:
+        curlist = []
+        possiblenodes = 0
+        for visited in alreadyvisited:
+            for possible in range(len(mat)) :
+                if(mat[visited][possible] == 1 and nodeindexes[possible] < 1) :
+                    possiblenodes+=1
+                    curlist.append(possible)
+                    nodeindexes[possible] = nodeindexes[visited] + 1
+        
+        if node2 in curlist :
+            foundPath = True
+            print("The path is: ")
+            count = nodeindexes[node2]
+            backpath.append(node2)
+            curnode = node2
+            while count > 0 :
+                for x in range(len(mat)) :
+                    if (nodeindexes[x] == count - 1 and mat[x][curnode] == 1) :
+                        
+                        print("(" + str(curnode) + ", " + str(x) + ")")
+                        curnode = x
+                        backpath.append(x)
+                        break
+                count -= 1        
+            return backpath
+        elif possiblenodes == 0:
+            print("No such path")
+            foundPath = True
+            return backpath
+        else :
+            alreadyvisited = curlist
+        
 #*************************************
 # This is where you write your code
 #
@@ -69,4 +124,21 @@ def shortest_path(mat,node1,node2):
 #*************************************
 
 def detect_cycle(mat):
-	
+    for i in range(len(mat)):
+        path = recur_cycle(mat, i, [])
+        if len(path) > 0:
+            for i in range(len(path) - 1):
+                print("(" + str(path[i]) + ", " + str(path[i+1]) + ")")
+            return path
+    print("No cycle")
+    return path
+
+def recur_cycle(mat, node, visited):
+    if len(visited) > 2 and node == visited[0]:
+        visited.append(node)
+        return visited
+    visited.append(node)
+    for j in range(len(mat)):
+        if mat[node][j] == 1 and (len(visited) < 2 or j != visited[-2]):
+            return recur_cycle(mat, j, visited)
+    return []
